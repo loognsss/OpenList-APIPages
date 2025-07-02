@@ -102,7 +102,7 @@
         </p>
         <p id="eo-show" style="text-align:center" hidden="true">
             本工具国内CDN加速及安全防护由<a href="https://edgeone.ai/zh?from=github" target="_blank">Tencent EdgeOne</a>赞助
-            <br><img src="https://edgeone.ai/media/34fe3a45-492d-4ea4-ae5d-ea1087ca7b4b.png" style="width: 150px"/>
+            <br><img src="https://edgeone.ai/media/34fe3a45-492d-4ea4-ae5d-ea1087ca7b4b.png" style="width: 150px" />
         </p>
     </div>
 </div>
@@ -147,10 +147,12 @@
 </div>
 
 <script src="/static/event.js"></script>
+<script src="/static/qrlogin.js"></script>
 <script src="/static/login.js"></script>
 <script src="/static/token.js"></script>
 <script src="/static/theme.js"></script>
 <script src="/static/aliv2.js"></script>
+<script src="/static/alitv.js"></script>
 <script src="/static/eulas.js"></script>
 <script src="/static/spoid.js"></script>
 <script src="/static/input.js"></script>
@@ -168,8 +170,7 @@
     const shared_btn_views = document.getElementById('sharepoint-btn-view');
     const shared_uid_views = document.getElementById('sharepoint-uid-view');
     const url_hash = window.location.hash.substring(1); // 去掉地址栏上的#号
-    const current_host = window.location.protocol + "//" + window.location.host;
-    if (window.location.host === "api.oplist.org.cn")
+    if(window.location.host==="api.oplist.org.cn")
         document.getElementById('eo-show').hidden = false;
     getToken();
     // 阿里云盘扫码v2相关变量
