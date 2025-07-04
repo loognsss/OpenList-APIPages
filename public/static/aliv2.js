@@ -3,7 +3,8 @@ class AlicloudQRLogin {
     constructor() {
         // 创建QR登录管理器实例
         this.qrManager = new QRLoginManager({
-            onSuccess: this.handleLoginSuccess.bind(this)
+            onSuccess: this.handleLoginSuccess.bind(this),
+            maxCheckTime: 30000 // 30秒过期时间
         });
     }
 

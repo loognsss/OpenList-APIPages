@@ -49,9 +49,24 @@ class QRLoginManager {
 
     // 显示二维码
     showQRCode(qrUrl, size = 200) {
-        const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent(qrUrl)}`;
-        document.getElementById(this.codeDisplayId).innerHTML = `<img src="${qrApiUrl}" alt="二维码" class="qr-code-img">`;
-        document.getElementById(this.codeContainerId).style.display = 'block';
+        try {
+            const codeDisplayElement = document.getElementById(this.codeDisplayId);
+            codeDisplayElement.innerHTML = ''; // 清除之前的内容
+            // 创建canvas元素
+            const canvas = document.createElement('canvas');
+            codeDisplayElement.appendChild(canvas);
+            // 使用新创建的canvas元素
+            QRCode.toCanvas(canvas, qrUrl, {
+                width: size,
+                margin: 1,
+            }, function(error) {
+                if (error) console.error('QR码生成错误:', error);
+            });
+
+            document.getElementById(this.codeContainerId).style.display = 'block';
+        } catch (error) {
+            console.error('生成QR码失败:', error);
+        }
     }
 
     // 设置状态

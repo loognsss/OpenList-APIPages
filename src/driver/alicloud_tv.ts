@@ -1,5 +1,6 @@
 import {Context} from "hono";
 import {pubLogin} from "../shares/oauthv2";
+import {Requests} from "../shares/request";
 
 // 定义API响应的接口
 interface AliCloudTVApiResponse {
@@ -402,13 +403,20 @@ function getClient(): AliyunPanTvToken {
 
 // checkQrcodeStatus 检查二维码状态
 async function checkQrcodeStatus(c: Context, sid: string): Promise<{ auth_code: string } | null> {
+    let headersBase ;
     try {
-        const response = await pubLogin(
+        headersBase = {
+            "User-Agent": "Mozilla/5.0 (Linux; U; Android 15; zh-cn; SM-S908E Build/UKQ1.231108.001) AppleWebKit/533.1 (KHTML, like Gecko) Mobile Safari/533.1",
+            "Host": "openapi.alipan.com",
+            "Content-Type": "text/plain;charset=UTF-8",
+        };
+        const response = await Requests(
             c,
             "",
             `https://openapi.alipan.com/oauth/qrcode/${sid}/status`,
-            false,
             "GET",
+            false,
+            headersBase,
             "json"
         );
 

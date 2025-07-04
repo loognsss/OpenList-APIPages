@@ -4,11 +4,11 @@ class AliTVQRLogin {
         // 创建QR登录管理器实例
         this.qrManager = new QRLoginManager({
             onSuccess: this.handleLoginSuccess.bind(this),
-            maxCheckTime: 300000 // 5分钟过期时间
+            maxCheckTime: 30000 // 30秒过期时间
         });
         this.sidValue = null; // 存储二维码的sid
         this.checkAttempts = 0; // 检查尝试次数
-        this.maxCheckAttempts = 120; // 最大检查次数（5分钟内，每2.5秒检查一次）
+        this.maxCheckAttempts = 12; // 最大检查次数（30秒内，每2.5秒检查一次）
     }
 
     // 启动阿里云盘TV版扫码登录
