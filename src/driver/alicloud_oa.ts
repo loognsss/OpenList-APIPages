@@ -5,6 +5,7 @@ import * as refresh from "../shares/refresh";
 import {getCookie, setCookie} from "../shares/cookies";
 import {pubLogin} from "../shares/oauthv2";
 import {encodeCallbackData, Secrets} from "../shares/secrets";
+import {checkStatus, getQRCode, refreshToken} from "./alicloud_tv";
 
 const driver_map = [
     'https://openapi.aliyundrive.com/oauth/authorize', // 客户端扫码和页面登录
@@ -36,30 +37,25 @@ interface AliQrcodeReq {
 export async function alyLogin(c: Context) {
     const clients: configs.Clients | undefined = configs.getInfo(c);
     if (!clients) return c.json({text: "传入参数缺少"}, 500);
+    setCookie(c, clients); //需要保存数据到浏览器本地 ===============
+    if (clients.drivers == "alicloud_tv") return await getQRCode(c);
     const client_secret = clients.servers ? c.env.alicloud_key : clients.servers
     let request_urls: string = driver_map[0]
     // 通用参数 =========================================================================
     let params_info: Record<string, any> = {
         client_id: clients.servers ? c.env.alicloud_uid : clients.app_uid,
-        scopes: ['user:base', 'file:all:read', 'file:all:write']
     }
     // QR扫码需要增加的参数 =============================================================
-    if (clients.drivers == "alicloud_tv") {
-        request_urls = driver_map[2]
-        params_info.client_id = undefined
-        params_info.params_info = {
-            "iv": "iv",
-            "ciphertext": "ciphertext"
-        }
-    } else if (clients.drivers == "alicloud_go") {
+    if (clients.drivers == "alicloud_go") {
         params_info.redirect_uri = 'https://' + c.env.MAIN_URLS + '/alicloud/callback'
         params_info.response_type = 'code'
+        params_info.scope = ['user:base', 'file:all:read', 'file:all:write']
     } else {
         request_urls += "/qrcode"
+        params_info.scopes = ['user:base', 'file:all:read', 'file:all:write']
         params_info.client_secret = client_secret
     }
-    //需要保存数据到浏览器本地 ==========================================================
-    setCookie(c, clients)
+
     // 执行请求 =========================================================================
     if (clients.drivers == "alicloud_go") {
         return await pubLogin(c, params_info, request_urls,
@@ -77,6 +73,7 @@ export async function alyLogin(c: Context) {
 // 令牌申请 ##############################################################################
 export async function alyToken(c: Context) {
     const clients_info: configs.Clients = getCookie(c);
+    if (clients_info.drivers == "alicloud_tv") return await checkStatus(c, clients_info);
     let oauth_type: string | undefined = c.req.query('grant_type')
     if (!clients_info.servers) clients_info.servers = c.req.query('server_use') == "true"
     if (!clients_info.drivers) return c.json({text: 'No Cookies',}, 401);
@@ -141,6 +138,7 @@ export async function genToken(c: Context) {
     const refresh_text: string | undefined = c.req.query('refresh_ui');
     if (!clients_info) return c.json({text: "传入参数缺少"}, 500);
     if (!refresh_text) return c.json({text: "缺少刷新令牌"}, 500);
+    if (clients_info.drivers == "alicloud_tv") return await refreshToken(c, refresh_text);
     // 请求参数 ==========================================================================
     const params: Record<string, any> = {
         client_id: clients_info.servers ? c.env.alicloud_uid : clients_info.app_uid,

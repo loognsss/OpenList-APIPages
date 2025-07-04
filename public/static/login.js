@@ -12,7 +12,9 @@ async function getLogin(refresh = false) {
     let check_flag = true;
     // 验证秘钥情况 ==================================================
     if (!server_use) {
-        if (driver_txt !== "alicloud_cs" && driver_txt !== "alicloud_tv" && driver_pre !== "baiduyun")
+        if (driver_txt !== "alicloud_cs"
+            && driver_txt !== "alicloud_tv"
+            && driver_pre !== "baiduyun")
             if (client_uid === "" || client_key === "")
                 check_flag = false
         if (driver_pre === "baiduyun")
@@ -24,19 +26,11 @@ async function getLogin(refresh = false) {
             return;
         }
     }
-
     // 阿里云盘扫码v2直接调用专用API，不需要构建传统的requests路径
     if (driver_txt === "alicloud_cs" && !refresh) {
         await startAlicloud2Login();
         return;
     }
-
-    // 阿里云盘TV版扫码登录，使用新的专用函数
-    if (driver_txt === "alicloud_tv" && !refresh) {
-        await startAliTVLogin();
-        return;
-    }
-
     // 刷新秘钥情况 =================================================
     let base_urls = "/requests?client_uid="
     if (refresh) {
@@ -117,15 +111,15 @@ async function getLogin(refresh = false) {
                 document.getElementById("access-token").value = response_data.text;
                 return;
             }
-            // Ali网盘原有扫码方式 ===========================================================
-            if (driver_txt === "alicloud_qr") {
+            // Ali网盘直接获取 ===========================================================
+            if (driver_txt === "alicloud_qr" || driver_txt === "alicloud_tv") {
                 let sid = response_data.sid;
                 await Swal.fire({
                     position: 'top',
                     icon: 'info',
                     title: '扫码登录',
                     html: `<div>请扫码登录，完成后点确定</div>` +
-                        `<img src="${response_data.text}" alt="">`,
+                        `<img src="${response_data.text}" alt="" style="max-width: 400px;">`,
                     showConfirmButton: true
                 });
                 post_urls = "/alicloud/callback" +
@@ -133,7 +127,8 @@ async function getLogin(refresh = false) {
                     "&client_secret=" + client_key +
                     "&server_use=" + server_use +
                     "&grant_type=" + "authorization_code" +
-                    "&code=" + sid
+                    "&code=" + sid +
+                    "&sid=" + sid
                 let auth_post = await fetch(post_urls, {method: 'GET'});
                 let auth_data = await auth_post.json();
                 if (auth_post.status === 200) {
