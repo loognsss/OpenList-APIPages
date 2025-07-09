@@ -3,6 +3,7 @@
   "scripts": {
     "dev-js": "tsx watch src/basic.ts",
     "build-js": "webpack --mode production",
+    "build-eo": "edgeone pages build",
     "dev-cf": "wrangler dev",
     "deploy-cf": "wrangler deploy --minify",
     "dev-eo": "edgeone pages dev",
