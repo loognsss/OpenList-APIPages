@@ -9,6 +9,7 @@ import * as goapi from './driver/googleui_oa';
 import * as yanui from './driver/yandexui_oa';
 import * as drops from './driver/dropboxs_oa';
 import * as quark from './driver/quarkpan_oa';
+import * as fnnas from './driver/fnnas_oa';
 
 export type Bindings = {
     // 基本配置 ================================
@@ -172,18 +173,21 @@ app.get('/yandexui/renewapi', async (c: Context) => {
 });
 
 // 登录申请 ##############################################################################
-app.get('/quarkyun/requests', async (c) => {
-    return await quark.getLogin(c);
+app.get('/quarkyun/requests', async (c: Context) => {
+    // return await quark.getLogin(c);
+    return await fnnas.getLogin(c);
 });
 
 // 令牌申请 ##############################################################################
-app.get('/quarkyun/callback', async (c) => {
-    return await quark.urlParse(c);
+app.get('/quarkyun/callback', async (c: Context) => {
+    // return await quark.urlParse(c);
+    return await fnnas.urlParse(c);
 });
 
 // 令牌刷新 ##############################################################################
-app.get('/quarkyun/renewapi', async (c) => {
-    return await quark.apiRenew(c);
+app.get('/quarkyun/renewapi', async (c: Context) => {
+    // return await quark.apiRenew(c);
+    return await fnnas.apiRenew(c);
 });
 
 

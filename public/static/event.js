@@ -70,10 +70,11 @@ function onSelect() {
             direct_url_input.value = "oob";
         }
     }
-    // if (driver_txt_input.value === "quarkyun_fn") {
-    //     server_use_input.checked = true;
-    //     server_use_input.disabled = false;
-    // }
+    if (driver_txt_input.value === "quarkyun_fn" ||
+        driver_txt_input.value === "123cloud_fn") {
+        server_use_input.checked = true;
+        server_use_input.disabled = false;
+    }
     // 禁用部分驱动使用官方参数 ===========================================
     if (driver_txt_input.value === "baiduyun_ob" ||
         driver_txt_input.value === "123cloud_go" ||
