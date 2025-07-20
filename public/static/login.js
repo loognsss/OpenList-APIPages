@@ -31,6 +31,13 @@ async function getLogin(refresh = false) {
         await startAlicloud2Login();
         return;
     }
+
+    // 阿里云盘TV版扫码登录，使用新的专用函数
+    if (driver_txt === "alicloud_tv" && !refresh) {
+        await startAliTVLogin();
+        return;
+    }
+
     // 刷新秘钥情况 =================================================
     let base_urls = "/requests?client_uid="
     if (refresh) {
@@ -81,6 +88,7 @@ async function getLogin(refresh = false) {
                 || driver_pre === "onedrive" || driver_pre === "115cloud"
                 || driver_pre === "googleui" || driver_pre === "yandexui"
                 || driver_pre === "dropboxs" || driver_pre === "quarkyun"
+                || driver_txt === "123cloud_fn"
             ) {
                 window.location.href = response_data.text;
             }
@@ -107,7 +115,7 @@ async function getLogin(refresh = false) {
                 });
             }
             // 123网盘直接获取 ===========================================================
-            if (driver_pre === "123cloud") {
+            if (driver_txt === "123cloud_go") {
                 document.getElementById("access-token").value = response_data.text;
                 return;
             }

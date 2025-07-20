@@ -5,7 +5,7 @@ import {Requests} from "./request";
 
 export async function pubRenew(c: Context,
                                APIUrl: string,
-                               Params: Record<string, string>,
+                               Params: Record<string, string> | string,
                                Method: string = "GET",
                                access_name: string = "access_token",
                                refresh_name: string = "refresh_token",
@@ -16,7 +16,8 @@ export async function pubRenew(c: Context,
     try {
         const result_json: Record<string, any> = await Requests(
             c, Params, APIUrl, Method, false, Header, "json")
-        const refresh_token = getDynamicValue(result_json, refresh_name, Params.refresh_token)
+        const origin_refresh_token = typeof Params === "object" && Params !== null ? Params['refresh_token'] : "";
+        const refresh_token = getDynamicValue(result_json, refresh_name, origin_refresh_token)
         const access_token = getDynamicValue(result_json, access_name, "")
         if (refresh_token)
             return c.json({

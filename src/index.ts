@@ -8,7 +8,8 @@ import * as baidu from './driver/baiduyun_oa';
 import * as goapi from './driver/googleui_oa';
 import * as yanui from './driver/yandexui_oa';
 import * as drops from './driver/dropboxs_oa';
-import * as quark from './driver/quarkpan_oa';
+import * as fnnas from './driver/fnnas_oa';
+import * as alitv from './driver/alicloud_tv';
 
 export type Bindings = {
     // 基本配置 ================================
@@ -172,19 +173,38 @@ app.get('/yandexui/renewapi', async (c: Context) => {
 });
 
 // 登录申请 ##############################################################################
-app.get('/quarkyun/requests', async (c) => {
-    return await quark.getLogin(c);
+app.get('/quarkyun/requests', async (c: Context) => {
+    return await fnnas.getLogin(c);
 });
 
 // 令牌申请 ##############################################################################
-app.get('/quarkyun/callback', async (c) => {
-    return await quark.urlParse(c);
+app.get('/quarkyun/callback', async (c: Context) => {
+    return await fnnas.urlParse(c);
 });
 
 // 令牌刷新 ##############################################################################
-app.get('/quarkyun/renewapi', async (c) => {
-    return await quark.apiRenew(c);
+app.get('/quarkyun/renewapi', async (c: Context) => {
+    return await fnnas.apiRenew(c);
 });
 
+// 阿里云盘TV版 - 获取二维码 ##############################################################################
+app.get('/alitv/qrcode', async (c: Context) => {
+    return await alitv.getQRCode(c);
+});
+
+// 阿里云盘TV版 - 检查扫码状态 ##############################################################################
+app.get('/alitv/check', async (c: Context) => {
+    return await alitv.checkStatus(c);
+});
+
+// 阿里云盘TV版 - 获取Token ##############################################################################
+app.get('/alitv/token', async (c: Context) => {
+    return await alitv.getTokenByAuthCode(c);
+});
+
+// 阿里云盘TV版 - 刷新Token ##############################################################################
+app.get('/alitv/renewapi', async (c: Context) => {
+    return await alitv.refreshToken(c);
+});
 
 export default app
