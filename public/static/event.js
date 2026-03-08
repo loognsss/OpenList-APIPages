@@ -41,6 +41,13 @@ function onSelect() {
         serverUseContainer.style.display = 'none';
         callbackContainer.style.display = 'none';
         server_use_input.checked = true;
+    } else if (driver_txt_input.value === "123cloud2_fn") {
+        // 123云盘v2不需要客户端ID、应用机密，但需要回调地址
+        clientIdContainer.style.display = 'none';
+        appSecretContainer.style.display = 'none';
+        serverUseContainer.style.display = 'none';
+        callbackContainer.style.display = 'block';
+        server_use_input.checked = true;
     } else {
         clientIdContainer.style.display = 'block';
         appSecretContainer.style.display = 'block';

@@ -9,6 +9,7 @@ import * as goapi from './driver/googleui_oa';
 import * as yanui from './driver/yandexui_oa';
 import * as drops from './driver/dropboxs_oa';
 import * as quark from './driver/quarkpan_oa';
+import * as ui123v2 from './driver/123cloud_oa2';
 
 export type Bindings = {
     // 基本配置 ================================
@@ -184,6 +185,21 @@ app.get('/quarkyun/callback', async (c) => {
 // 令牌刷新 ##############################################################################
 app.get('/quarkyun/renewapi', async (c) => {
     return await quark.apiRenew(c);
+});
+
+// 登录申请 ##############################################################################
+app.get('/123cloud2/requests', async (c) => {
+    return await ui123v2.getLogin(c);
+});
+
+// 令牌申请 ##############################################################################
+app.get('/123cloud2/callback', async (c) => {
+    return await ui123v2.urlParse(c);
+});
+
+// 令牌刷新 ##############################################################################
+app.get('/123cloud2/renewapi', async (c) => {
+    return await ui123v2.apiRenew(c);
 });
 
 
