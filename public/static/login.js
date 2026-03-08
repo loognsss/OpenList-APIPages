@@ -81,6 +81,7 @@ async function getLogin(refresh = false) {
                 || driver_pre === "onedrive" || driver_pre === "115cloud"
                 || driver_pre === "googleui" || driver_pre === "yandexui"
                 || driver_pre === "dropboxs" || driver_pre === "quarkyun"
+                || driver_pre === "123cloud2"
             ) {
                 window.location.href = response_data.text;
             }
